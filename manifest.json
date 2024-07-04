@@ -6,5 +6,6 @@
 	"description": "Auto rename pasted images added to the vault via hash algorithm SHA-512",
 	"author": "Minh Vương",
 	"authorUrl": "https://github.com/hardingadonis",
+	"fundingUrl": "https://github.com/sponsors/hardingadonis",
 	"isDesktopOnly": false
 }
