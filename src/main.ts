@@ -4,7 +4,7 @@ import { hash, path } from './utils';
 
 const PASTED_IMAGE_PREFIX = 'Pasted image ';
 
-export default class HashPastedImage extends Plugin {
+export default class HashPastedImagePlugin extends Plugin {
 	async onload() {
 		this.registerEvent(
 			this.app.vault.on('create', (file) => {

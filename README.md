@@ -1,9 +1,9 @@
-# Obsidian Hash Pasted Image
+# Hash Pasted Image
 
-![GitHub contributors](https://img.shields.io/github/contributors/hardingadonis/obsidian-hash-pasted-image)
-![GitHub top language](https://img.shields.io/github/languages/top/hardingadonis/obsidian-hash-pasted-image)
-![GitHub repo size](https://img.shields.io/github/repo-size/hardingadonis/obsidian-hash-pasted-image)
-![GitHub License](https://img.shields.io/github/license/hardingadonis/obsidian-hash-pasted-image)
+![GitHub contributors](https://img.shields.io/github/contributors/hardingadonis/hash-pasted-image)
+![GitHub top language](https://img.shields.io/github/languages/top/hardingadonis/hash-pasted-image)
+![GitHub repo size](https://img.shields.io/github/repo-size/hardingadonis/hash-pasted-image)
+![GitHub License](https://img.shields.io/github/license/hardingadonis/hash-pasted-image)
 
 > Auto rename pasted images added to the vault via hash algorithm SHA-512
 
@@ -17,6 +17,6 @@
 
 ## Contributors
 
-<a href="https://github.com/hardingadonis/obsidian-hash-pasted-image/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=hardingadonis/obsidian-hash-pasted-image" />
+<a href="https://github.com/hardingadonis/hash-pasted-image/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=hardingadonis/hash-pasted-image" />
 </a>
