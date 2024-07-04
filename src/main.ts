@@ -1,6 +1,6 @@
-import { MarkdownView, Notice, Plugin, TFile, TAbstractFile } from 'obsidian';
+import { MarkdownView, Plugin, TFile, TAbstractFile } from 'obsidian';
 
-import { md5, path } from './utils';
+import { hash, path } from './utils';
 
 const PASTED_IMAGE_PREFIX = 'Pasted image ';
 
@@ -17,8 +17,6 @@ export default class HashPastedImage extends Plugin {
 
 				if (isPastedImage(file)) {
 					this.startRenameProcess(file);
-				} else {
-					new Notice(`Created ${file.name}`);
 				}
 			}),
 		);
@@ -27,7 +25,6 @@ export default class HashPastedImage extends Plugin {
 	async startRenameProcess(file: TFile) {
 		const activeFile = this.getActiveFile();
 		if (!activeFile) {
-			new Notice('Error: No active file found.');
 			return;
 		}
 
@@ -38,13 +35,11 @@ export default class HashPastedImage extends Plugin {
 		try {
 			await this.app.fileManager.renameFile(file, newPath);
 		} catch (err) {
-			new Notice(`Failed to rename ${newName}: ${err}`);
 			throw err;
 		}
 
 		const editor = this.getActiveEditor();
 		if (!editor) {
-			new Notice(`Failed to rename ${newName}: no active editor`);
 			return;
 		}
 
@@ -61,12 +56,10 @@ export default class HashPastedImage extends Plugin {
 				},
 			],
 		});
-
-		new Notice(`Renamed ${originName} to ${newName}`);
 	}
 
 	generateNewName(file: TFile) {
-		return md5(file.name + new Date().toString()) + '.' + file.extension;
+		return hash(file.name + new Date().toString()) + '.' + file.extension;
 	}
 
 	getActiveFile() {
