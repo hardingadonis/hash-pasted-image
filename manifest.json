@@ -1,7 +1,7 @@
 {
 	"id": "hash-pasted-image",
 	"name": "Obsidian Hash Pasted Image",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"minAppVersion": "0.15.0",
 	"description": "Auto rename pasted images added to the vault via hash algorithm SHA-512",
 	"author": "Minh Vương",
