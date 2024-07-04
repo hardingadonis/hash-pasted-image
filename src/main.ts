@@ -35,6 +35,7 @@ export default class HashPastedImage extends Plugin {
 		try {
 			await this.app.fileManager.renameFile(file, newPath);
 		} catch (err) {
+			console.log(err);
 			throw err;
 		}
 
