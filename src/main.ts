@@ -23,7 +23,7 @@ export default class HashPastedImagePlugin extends Plugin {
 	}
 
 	async startRenameProcess(file: TFile) {
-		const activeFile = this.getActiveFile();
+		const activeFile = this.app.workspace.getActiveFile();
 		if (!activeFile) {
 			return;
 		}
@@ -39,7 +39,7 @@ export default class HashPastedImagePlugin extends Plugin {
 			throw err;
 		}
 
-		const editor = this.getActiveEditor();
+		const editor = this.app.workspace.activeEditor?.editor;
 		if (!editor) {
 			return;
 		}
@@ -61,19 +61,6 @@ export default class HashPastedImagePlugin extends Plugin {
 
 	generateNewName(file: TFile) {
 		return hash(file.name + new Date().toString()) + '.' + file.extension;
-	}
-
-	getActiveFile() {
-		const view = this.app.workspace.getActiveViewOfType(MarkdownView);
-		const file = view?.file;
-
-		return file;
-	}
-
-	getActiveEditor() {
-		const view = this.app.workspace.getActiveViewOfType(MarkdownView);
-
-		return view?.editor;
 	}
 }
 
