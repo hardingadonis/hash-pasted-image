@@ -1,6 +1,6 @@
 {
 	"name": "hash-pasted-image",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"description": "Auto rename pasted images added to the vault via hash algorithm SHA-512",
 	"main": "main.js",
 	"scripts": {
