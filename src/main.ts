@@ -1,4 +1,4 @@
-import { MarkdownView, Plugin, TFile, TAbstractFile } from 'obsidian';
+import { Plugin, TFile, TAbstractFile } from 'obsidian';
 
 import { hash, path } from './utils';
 
