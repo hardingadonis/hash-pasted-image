@@ -64,7 +64,7 @@ export default class HashPastedImagePlugin extends Plugin {
 	}
 }
 
-function isPastedImage(file: TAbstractFile): boolean {
+const isPastedImage = (file: TAbstractFile): boolean => {
 	if (file instanceof TFile) {
 		if (file.name.startsWith(PASTED_IMAGE_PREFIX)) {
 			return true;
@@ -72,9 +72,9 @@ function isPastedImage(file: TAbstractFile): boolean {
 	}
 
 	return false;
-}
+};
 
-function isImageFile(file: TAbstractFile): boolean {
+const isImageFile = (file: TAbstractFile): boolean => {
 	if (file instanceof TFile) {
 		const validExtensions = [
 			'jpg',
@@ -95,9 +95,9 @@ function isImageFile(file: TAbstractFile): boolean {
 	}
 
 	return false;
-}
+};
 
-function isMarkdownFile(file: TAbstractFile): boolean {
+const isMarkdownFile = (file: TAbstractFile): boolean => {
 	if (file instanceof TFile) {
 		if (file.extension === 'md') {
 			return true;
@@ -105,4 +105,4 @@ function isMarkdownFile(file: TAbstractFile): boolean {
 	}
 
 	return false;
-}
+};
