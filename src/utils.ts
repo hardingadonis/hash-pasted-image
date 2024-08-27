@@ -1,4 +1,5 @@
 import * as crypto from 'crypto';
+import { HashAlgorithm } from 'settings';
 
 export const hash = (algorithm: string, contents: string) =>
 	crypto.createHash(algorithm).update(contents).digest('hex');
@@ -35,4 +36,19 @@ export const path = {
 
 		return fullpath.slice(positions[positions.length - 1] + 1);
 	},
+};
+
+export const stringToHashAlgorithm = (str: string): HashAlgorithm => {
+	switch (str) {
+		case 'sha256':
+			return HashAlgorithm.SHA256;
+		case 'sha384':
+			return HashAlgorithm.SHA384;
+		case 'sha512':
+			return HashAlgorithm.SHA512;
+		case 'md5':
+			return HashAlgorithm.MD5;
+		default:
+			return HashAlgorithm.SHA512;
+	}
 };

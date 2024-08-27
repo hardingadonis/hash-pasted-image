@@ -1,9 +1,19 @@
-import { Plugin, TFile, TAbstractFile } from 'obsidian';
+import {
+	Plugin,
+	TFile,
+	TAbstractFile,
+	PluginSettingTab,
+	App,
+	Setting,
+	Notice,
+} from 'obsidian';
 
-import { hash, path } from './utils';
-import { DEFAULT_SETTINGS, PluginSettings } from 'settings';
+import { hash, path, stringToHashAlgorithm } from './utils';
+import { DEFAULT_SETTINGS, HashAlgorithm, PluginSettings } from 'settings';
 
 const PASTED_IMAGE_PREFIX = 'Pasted image ';
+
+//---------------------------------------------------------------------
 
 export default class HashPastedImagePlugin extends Plugin {
 	settings: PluginSettings;
@@ -25,6 +35,8 @@ export default class HashPastedImagePlugin extends Plugin {
 				}
 			}),
 		);
+
+		this.addSettingTab(new SettingTab(this.app, this));
 	}
 
 	async startRenameProcess(file: TFile) {
@@ -62,6 +74,10 @@ export default class HashPastedImagePlugin extends Plugin {
 				},
 			],
 		});
+
+		if (this.settings.notification) {
+			new Notice(`Pasted image renamed to ${newName}`);
+		}
 	}
 
 	generateNewName(file: TFile) {
@@ -123,3 +139,56 @@ const isMarkdownFile = (file: TAbstractFile): boolean => {
 
 	return false;
 };
+
+//---------------------------------------------------------------------
+
+class SettingTab extends PluginSettingTab {
+	plugin: HashPastedImagePlugin;
+
+	constructor(app: App, plugin: HashPastedImagePlugin) {
+		super(app, plugin);
+		this.plugin = plugin;
+	}
+
+	display() {
+		const { containerEl } = this;
+		containerEl.empty();
+
+		containerEl.createEl('h3', { text: 'Hash Pasted Image Settings' });
+		containerEl.createEl('p', {
+			text: 'Auto rename pasted images added to the vault via hash algorithm SHA-512',
+		});
+
+		new Setting(containerEl)
+			.setName('Hash Algorithm')
+			.setDesc('Algorithm to hash the pasted image name.')
+			.addDropdown((dropdown) =>
+				dropdown
+					.addOption(HashAlgorithm.SHA256, 'SHA-256')
+					.addOption(HashAlgorithm.SHA384, 'SHA-384')
+					.addOption(HashAlgorithm.SHA512, 'SHA-512')
+					.addOption(HashAlgorithm.MD5, 'MD5')
+					.setValue(this.plugin.settings.hashAlgorithm)
+					.onChange(async (value) => {
+						this.plugin.settings.hashAlgorithm = stringToHashAlgorithm(value);
+						await this.plugin.saveSettings();
+					}),
+			);
+
+		new Setting(containerEl)
+			.setName('Notification')
+			.setDesc('Show a notification when a pasted image is renamed.')
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.plugin.settings.notification)
+					.onChange(async (value) => {
+						this.plugin.settings.notification = value;
+						await this.plugin.saveSettings();
+					}),
+			);
+	}
+
+	onClose() {
+		this.plugin.saveSettings();
+	}
+}
