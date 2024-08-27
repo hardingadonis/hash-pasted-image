@@ -7,10 +7,12 @@ export enum HashAlgorithm {
 
 export interface PluginSettings {
 	hashAlgorithm: HashAlgorithm;
+	copyImageFileSupport: boolean;
 	notification: boolean;
 }
 
 export const DEFAULT_SETTINGS: PluginSettings = {
 	hashAlgorithm: HashAlgorithm.SHA512,
+	copyImageFileSupport: false,
 	notification: true,
 };
