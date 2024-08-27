@@ -1,6 +1,6 @@
 # Hash Pasted Image
 
-[![Obsidian Downloads](https://img.shields.io/badge/dynamic/json?logo=obsidian&color=%23483699&label=downloads&query=%24%5B%22hash-pasted-image%22%5D.downloads&url=https%3A%2F%2Fraw.githubusercontent.com%2Fobsidianmd%2Fobsidian-releases%2Fmaster%2Fcommunity-plugin-stats.json)](obsidian://show-plugin?id=hash-pasted-image)
+![Obsidian Downloads](https://img.shields.io/badge/dynamic/json?logo=obsidian&color=%23483699&label=downloads&query=%24%5B%22hash-pasted-image%22%5D.downloads&url=https%3A%2F%2Fraw.githubusercontent.com%2Fobsidianmd%2Fobsidian-releases%2Fmaster%2Fcommunity-plugin-stats.json)
 [![GitHub contributors](https://img.shields.io/github/contributors/hardingadonis/hash-pasted-image)](https://github.com/hardingadonis/hash-pasted-image/graphs/contributors)
 [![GitHub top language](https://img.shields.io/github/languages/top/hardingadonis/hash-pasted-image)](ttps://github.com/hardingadonis/hash-pasted-image)
 [![GitHub repo size](https://img.shields.io/github/repo-size/hardingadonis/hash-pasted-image)](ttps://github.com/hardingadonis/hash-pasted-image)
@@ -16,11 +16,6 @@
 - Copy an image to the clipboard.
 - Paste the image into the vault.
 - The image will be renamed to the SHA-512 hash of the image old name.
-
-## Installation
-
-- Open Obsidian.
-- Install [hash-pasted-image](obsidian://show-plugin?id=hash-pasted-image).
 
 ## Settings
 
