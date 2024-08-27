@@ -89,7 +89,8 @@ export default class HashPastedImagePlugin extends Plugin {
 	}
 
 	async loadSettings() {
-		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+		const loadedData = await this.loadData();
+		this.settings = { ...DEFAULT_SETTINGS, ...loadedData };
 	}
 
 	async saveSettings() {
