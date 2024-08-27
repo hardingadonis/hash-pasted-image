@@ -30,7 +30,11 @@ export default class HashPastedImagePlugin extends Plugin {
 
 				if (isMarkdownFile(file)) return;
 
-				if (isPastedImage(file) || isImageFile(file)) {
+				let isImageFileSupport =
+					this.settings.copyImageFileSupport && isImageFile(file);
+				let isPasted = isPastedImage(file);
+
+				if (isImageFileSupport || isPasted) {
 					this.startRenameProcess(file);
 				}
 			}),
@@ -177,6 +181,20 @@ class SettingTab extends PluginSettingTab {
 			);
 
 		new Setting(containerEl)
+			.setName('Copy Image File Support')
+			.setDesc(
+				'Turn on to rename image files (not copy from clipboard) copied to the vault. Support formats: jpg, jpeg, png, gif, bmp, tiff, tif, webp, heif, heic, svg, ico.',
+			)
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.plugin.settings.copyImageFileSupport)
+					.onChange(async (value) => {
+						this.plugin.settings.copyImageFileSupport = value;
+						await this.plugin.saveSettings();
+					}),
+			);
+
+		new Setting(containerEl)
 			.setName('Notification')
 			.setDesc('Show a notification when a pasted image is renamed.')
 			.addToggle((toggle) =>
@@ -187,9 +205,5 @@ class SettingTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					}),
 			);
-	}
-
-	onClose() {
-		this.plugin.saveSettings();
 	}
 }
