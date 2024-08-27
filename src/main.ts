@@ -1,11 +1,16 @@
 import { Plugin, TFile, TAbstractFile } from 'obsidian';
 
 import { hash, path } from './utils';
+import { DEFAULT_SETTINGS, PluginSettings } from 'settings';
 
 const PASTED_IMAGE_PREFIX = 'Pasted image ';
 
 export default class HashPastedImagePlugin extends Plugin {
+	settings: PluginSettings;
+
 	async onload() {
+		await this.loadSettings();
+
 		this.registerEvent(
 			this.app.vault.on('create', (file) => {
 				if (!(file instanceof TFile)) return;
@@ -60,7 +65,19 @@ export default class HashPastedImagePlugin extends Plugin {
 	}
 
 	generateNewName(file: TFile) {
-		return hash(file.name + new Date().toString()) + '.' + file.extension;
+		return (
+			hash(this.settings.hashAlgorithm, file.name + new Date().toString()) +
+			'.' +
+			file.extension
+		);
+	}
+
+	async loadSettings() {
+		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+	}
+
+	async saveSettings() {
+		await this.saveData(this.settings);
 	}
 }
 

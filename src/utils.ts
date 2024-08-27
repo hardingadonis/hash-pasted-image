@@ -1,7 +1,7 @@
 import * as crypto from 'crypto';
 
-export const hash = (contents: string) =>
-	crypto.createHash('sha512').update(contents).digest('hex');
+export const hash = (algorithm: string, contents: string) =>
+	crypto.createHash(algorithm).update(contents).digest('hex');
 
 export const path = {
 	join(...partSegments: string[]): string {
