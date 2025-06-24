@@ -24,4 +24,4 @@ export const DEFAULT_SETTINGS: PluginSettings = {
 	encodingDigest: EncodeDigest.HEX,
 	notification: true,
 	hashContext: false,
-}
+};

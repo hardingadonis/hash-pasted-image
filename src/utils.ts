@@ -1,7 +1,11 @@
 import * as crypto from 'crypto';
 import { HashAlgorithm, EncodeDigest } from 'settings';
 
-export const hash = (algorithm: string, digest: string, contents: string | Uint8Array) => {
+export const hash = (
+	algorithm: string,
+	digest: string,
+	contents: string | Uint8Array,
+) => {
 	const digenc: crypto.BinaryToTextEncoding = <crypto.BinaryToTextEncoding>(
 		digest
 	);
@@ -72,8 +76,10 @@ export const stringToEncodeDigest = (str: string): EncodeDigest => {
 	}
 };
 
-
-export const ArrayBufferEqual = (buf1: ArrayBuffer, buf2: ArrayBuffer): boolean => {
+export const ArrayBufferEqual = (
+	buf1: ArrayBuffer,
+	buf2: ArrayBuffer,
+): boolean => {
 	if (buf1.byteLength != buf2.byteLength) return false;
 	let dv1 = new Uint8Array(buf1);
 	let dv2 = new Uint8Array(buf2);
@@ -81,4 +87,4 @@ export const ArrayBufferEqual = (buf1: ArrayBuffer, buf2: ArrayBuffer): boolean 
 		if (dv1[i] != dv2[i]) return false;
 	}
 	return true;
-}
+};
