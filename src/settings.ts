@@ -15,6 +15,7 @@ export interface PluginSettings {
 	encodingDigest: EncodeDigest;
 	copyImageFileSupport: boolean;
 	notification: boolean;
+	hashContext: boolean;
 }
 
 export const DEFAULT_SETTINGS: PluginSettings = {
@@ -22,4 +23,5 @@ export const DEFAULT_SETTINGS: PluginSettings = {
 	copyImageFileSupport: false,
 	encodingDigest: EncodeDigest.HEX,
 	notification: true,
-};
+	hashContext: false,
+}

@@ -6,6 +6,7 @@ import {
 	App,
 	Setting,
 	Notice,
+	normalizePath,
 } from 'obsidian';
 
 import {
@@ -13,6 +14,7 @@ import {
 	path,
 	stringToHashAlgorithm,
 	stringToEncodeDigest,
+	ArrayBufferEqual,
 } from './utils';
 import {
 	DEFAULT_SETTINGS,
@@ -60,16 +62,18 @@ export default class HashPastedImagePlugin extends Plugin {
 		}
 
 		const originName = file.name;
-		const newName = this.generateNewName(file);
-
+		const newName = await this.generateNewName(file);
 		const newPath = path.join(file.parent.path, newName);
-		try {
-			await this.app.fileManager.renameFile(file, newPath);
-		} catch (err) {
-			console.log(err);
-			throw err;
-		}
+		const isRename = await this.fixHashCollision(file, originName, newPath);
 
+		if (isRename) {
+			try {
+				await this.app.fileManager.renameFile(file, newPath);
+			} catch (err) {
+				console.log(err);
+				throw err;
+			}
+		}
 		const editor = this.app.workspace.activeEditor?.editor;
 		if (!editor) {
 			return;
@@ -98,16 +102,46 @@ export default class HashPastedImagePlugin extends Plugin {
 		}
 	}
 
-	generateNewName(file: TFile) {
+	async generateNewName(file: TFile): Promise<string> {
+		let hashContext : string | Uint8Array;
+		if( this.settings.hashContext) {
+			const imageContent = await file.vault.readBinary(file);
+   			hashContext = new Uint8Array(imageContent);
+		}else{
+			hashContext = file.name + new Date().toString();
+		}
 		return (
 			hash(
 				this.settings.hashAlgorithm,
 				this.settings.encodingDigest,
-				file.name + new Date().toString(),
+				hashContext,
 			) +
 			'.' +
 			file.extension
 		);
+	}
+
+	async fixHashCollision(file: TFile, originName: string, newPath: string): Promise<boolean> {
+		let isRename = true;
+		if (this.settings.hashContext) {
+			const renamedFile = this.app.vault.getAbstractFileByPath(normalizePath(newPath));
+			if (renamedFile instanceof TFile) {
+				const imageContent = await file.vault.readBinary(file);
+				const renamedContext = await renamedFile.vault.readBinary(renamedFile);
+				if (ArrayBufferEqual(imageContent, renamedContext)) {
+					isRename = false;
+					await this.app.fileManager.trashFile(file);
+					if (this.settings.notification) {
+						try{
+							new Notice(`Pasted image ${originName} already exists hashed file, and has been removed.`);
+						}catch(err){
+							console.error(err);
+						}
+					}
+				}
+			}
+		}
+		return isRename;
 	}
 
 	async loadSettings() {
@@ -237,5 +271,17 @@ class SettingTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					}),
 			);
+		new Setting(containerEl)
+			.setName('HashContext')
+			.setDesc('Gen hash by filename or file context')
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.plugin.settings.hashContext)
+					.onChange(async (value) => {
+						this.plugin.settings.hashContext = value;
+						await this.plugin.saveSettings();
+					}),
+			);
+		
 	}
 }
