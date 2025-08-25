@@ -1,27 +1,27 @@
 import {
-	Plugin,
-	TFile,
-	TAbstractFile,
-	PluginSettingTab,
 	App,
-	Setting,
 	Notice,
+	Plugin,
+	PluginSettingTab,
+	Setting,
+	TAbstractFile,
+	TFile,
 	normalizePath,
 } from 'obsidian';
 
 import {
-	hash,
-	path,
-	stringToHashAlgorithm,
-	stringToEncodeDigest,
-	arrayBufferEqual,
-} from '@/utils';
-import {
 	DEFAULT_SETTINGS,
-	HashAlgorithm,
 	EncodeDigest,
+	HashAlgorithm,
 	PluginSettings,
 } from '@/settings';
+import {
+	arrayBufferEqual,
+	hash,
+	path,
+	stringToEncodeDigest,
+	stringToHashAlgorithm,
+} from '@/utils';
 
 const PASTED_IMAGE_PREFIX = 'Pasted image ';
 
