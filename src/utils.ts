@@ -1,53 +1,19 @@
 import crypto from 'crypto';
-import { HashAlgorithm, EncodeDigest } from '@/settings';
+
+import { EncodeDigest, HashAlgorithm } from '@/settings';
 
 export const hash = (
 	algorithm: string,
-	digest: string,
+	digest: EncodeDigest,
 	contents: string | Uint8Array,
 ) => {
-	const digenc: crypto.BinaryToTextEncoding = <crypto.BinaryToTextEncoding>(
-		digest
-	);
+	const digenc: crypto.BinaryToTextEncoding = digest;
+
 	return crypto
 		.createHash(algorithm)
 		.update(contents)
 		.digest(digenc)
 		.replaceAll('=', '');
-};
-
-export const path = {
-	join(...partSegments: string[]): string {
-		let parts: string[] = [];
-
-		for (let i = 0, l = partSegments.length; i < l; i++) {
-			parts = parts.concat(partSegments[i].split('/'));
-		}
-
-		const newParts = [];
-
-		for (let i = 0, l = parts.length; i < l; i++) {
-			const part = parts[i];
-			if (!part || part === '.') continue;
-			else newParts.push(part);
-		}
-
-		if (parts[0] === '') newParts.unshift('');
-
-		return newParts.join('/');
-	},
-
-	basename(fullpath: string): string {
-		const sp = fullpath.split('/');
-
-		return sp[sp.length - 1];
-	},
-
-	extension(fullpath: string): string {
-		const positions = [...fullpath.matchAll(/\./gi)].map((a) => a.index);
-
-		return fullpath.slice(positions[positions.length - 1] + 1);
-	},
 };
 
 export const stringToHashAlgorithm = (str: string): HashAlgorithm => {
@@ -81,10 +47,17 @@ export const arrayBufferEqual = (
 	buf2: ArrayBuffer,
 ): boolean => {
 	if (buf1.byteLength != buf2.byteLength) return false;
+
 	let dv1 = new Uint8Array(buf1);
 	let dv2 = new Uint8Array(buf2);
+
 	for (let i = 0; i < buf1.byteLength; i++) {
 		if (dv1[i] != dv2[i]) return false;
 	}
+
 	return true;
+};
+
+export const delay = (ms: number): Promise<void> => {
+	return new Promise((resolve) => setTimeout(resolve, ms));
 };

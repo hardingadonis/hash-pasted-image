@@ -18,6 +18,7 @@ import {
 } from '@/settings';
 import {
 	arrayBufferEqual,
+	delay,
 	hash,
 	// path,
 	stringToEncodeDigest,
@@ -25,6 +26,8 @@ import {
 } from '@/utils';
 
 const PASTED_IMAGE_PREFIX = 'Pasted image ';
+const TIME_GAP_MS = 5000;
+const TIME_DELAY = 200;
 
 //---------------------------------------------------------------------
 
@@ -35,20 +38,20 @@ export default class HashPastedImagePlugin extends Plugin {
 		await this.loadSettings();
 
 		this.registerEvent(
-			this.app.vault.on('create', (file) => {
+			this.app.vault.on('create', async (file) => {
 				if (!(file instanceof TFile)) return;
 
 				const timeGapMs = new Date().getTime() - file.stat.ctime;
-				if (timeGapMs > 1000) return;
+				if (timeGapMs > TIME_GAP_MS) return;
 
 				if (isMarkdownFile(file)) return;
 
-				let isImageFileSupport =
+				const isImageFileSupport =
 					this.settings.copyImageFileSupport && isImageFile(file);
-				let isPasted = isPastedImage(file);
+				const isPasted = isPastedImage(file);
 
 				if (isImageFileSupport || isPasted) {
-					this.startRenameProcess(file);
+					await this.startRenameProcess(file);
 				}
 			}),
 		);
@@ -69,6 +72,7 @@ export default class HashPastedImagePlugin extends Plugin {
 
 		if (isRename) {
 			try {
+				await delay(TIME_DELAY);
 				await this.app.fileManager.renameFile(file, newPath);
 			} catch (err) {
 				console.log(err);
@@ -105,21 +109,21 @@ export default class HashPastedImagePlugin extends Plugin {
 
 	async generateNewName(file: TFile): Promise<string> {
 		let hashContext: string | Uint8Array;
+
 		if (this.settings.hashContext) {
 			const imageContent = await file.vault.readBinary(file);
 			hashContext = new Uint8Array(imageContent);
 		} else {
 			hashContext = file.name + new Date().toString();
 		}
-		return (
-			hash(
-				this.settings.hashAlgorithm,
-				this.settings.encodingDigest,
-				hashContext,
-			) +
-			'.' +
-			file.extension
+
+		const name = hash(
+			this.settings.hashAlgorithm,
+			this.settings.encodingDigest,
+			hashContext,
 		);
+
+		return name + '.' + file.extension;
 	}
 
 	async fixHashCollision(
@@ -128,16 +132,20 @@ export default class HashPastedImagePlugin extends Plugin {
 		newPath: string,
 	): Promise<boolean> {
 		let isRename = true;
+
 		if (this.settings.hashContext) {
 			const renamedFile = this.app.vault.getAbstractFileByPath(
 				normalizePath(newPath),
 			);
+
 			if (renamedFile instanceof TFile) {
 				const imageContent = await file.vault.readBinary(file);
 				const renamedContext = await renamedFile.vault.readBinary(renamedFile);
+
 				if (arrayBufferEqual(imageContent, renamedContext)) {
 					isRename = false;
 					await this.app.fileManager.trashFile(file);
+
 					if (this.settings.notification) {
 						try {
 							new Notice(
@@ -150,6 +158,7 @@ export default class HashPastedImagePlugin extends Plugin {
 				}
 			}
 		}
+
 		return isRename;
 	}
 
@@ -280,6 +289,7 @@ class SettingTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					}),
 			);
+
 		new Setting(containerEl)
 			.setName('HashContext')
 			.setDesc('Gen hash by filename or file context')
