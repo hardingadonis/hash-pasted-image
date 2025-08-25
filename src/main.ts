@@ -8,6 +8,7 @@ import {
 	TFile,
 	normalizePath,
 } from 'obsidian';
+import path from 'path';
 
 import {
 	DEFAULT_SETTINGS,
@@ -18,7 +19,7 @@ import {
 import {
 	arrayBufferEqual,
 	hash,
-	path,
+	// path,
 	stringToEncodeDigest,
 	stringToHashAlgorithm,
 } from '@/utils';

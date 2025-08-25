@@ -1,4 +1,4 @@
-import * as crypto from 'crypto';
+import crypto from 'crypto';
 import { HashAlgorithm, EncodeDigest } from '@/settings';
 
 export const hash = (
