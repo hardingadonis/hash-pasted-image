@@ -20,7 +20,6 @@ import {
 	arrayBufferEqual,
 	delay,
 	hash,
-	// path,
 	stringToEncodeDigest,
 	stringToHashAlgorithm,
 } from '@/utils';
@@ -46,11 +45,11 @@ export default class HashPastedImagePlugin extends Plugin {
 
 				if (isMarkdownFile(file)) return;
 
-				const isImageFileSupport =
-					this.settings.copyImageFileSupport && isImageFile(file);
+				const isFileSupport =
+					this.settings.copyImageFileSupport && isSupportedFile(file);
 				const isPasted = isPastedImage(file);
 
-				if (isImageFileSupport || isPasted) {
+				if (isFileSupport || isPasted) {
 					await this.startRenameProcess(file);
 				}
 			}),
@@ -182,9 +181,9 @@ const isPastedImage = (file: TAbstractFile): boolean => {
 	return false;
 };
 
-const isImageFile = (file: TAbstractFile): boolean => {
+const isSupportedFile = (file: TAbstractFile): boolean => {
 	if (file instanceof TFile) {
-		const validExtensions = [
+		const imageValidExtensions = [
 			'jpg',
 			'jpeg',
 			'png',
@@ -197,6 +196,36 @@ const isImageFile = (file: TAbstractFile): boolean => {
 			'heic',
 			'svg',
 			'ico',
+		];
+
+		const videoValidExtensions = [
+			'mp4',
+			'mkv',
+			'webm',
+			'avi',
+			'mov',
+			'flv',
+			'wmv',
+		];
+
+		const audioValidExtensions = ['mp3', 'wav', 'flac', 'aac', 'ogg', 'm4a'];
+
+		const documentValidExtensions = [
+			'pdf',
+			'doc',
+			'docx',
+			'xls',
+			'xlsx',
+			'ppt',
+			'pptx',
+			'txt',
+		];
+
+		const validExtensions = [
+			...imageValidExtensions,
+			...videoValidExtensions,
+			...audioValidExtensions,
+			...documentValidExtensions,
 		];
 
 		return validExtensions.includes(file.extension.toLowerCase());
