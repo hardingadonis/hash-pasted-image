@@ -14,14 +14,14 @@ import {
 	path,
 	stringToHashAlgorithm,
 	stringToEncodeDigest,
-	ArrayBufferEqual,
-} from './utils';
+	arrayBufferEqual,
+} from '@/utils';
 import {
 	DEFAULT_SETTINGS,
 	HashAlgorithm,
 	EncodeDigest,
 	PluginSettings,
-} from 'settings';
+} from '@/settings';
 
 const PASTED_IMAGE_PREFIX = 'Pasted image ';
 
@@ -134,7 +134,7 @@ export default class HashPastedImagePlugin extends Plugin {
 			if (renamedFile instanceof TFile) {
 				const imageContent = await file.vault.readBinary(file);
 				const renamedContext = await renamedFile.vault.readBinary(renamedFile);
-				if (ArrayBufferEqual(imageContent, renamedContext)) {
+				if (arrayBufferEqual(imageContent, renamedContext)) {
 					isRename = false;
 					await this.app.fileManager.trashFile(file);
 					if (this.settings.notification) {

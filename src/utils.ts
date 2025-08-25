@@ -76,7 +76,7 @@ export const stringToEncodeDigest = (str: string): EncodeDigest => {
 	}
 };
 
-export const ArrayBufferEqual = (
+export const arrayBufferEqual = (
 	buf1: ArrayBuffer,
 	buf2: ArrayBuffer,
 ): boolean => {
