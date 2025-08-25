@@ -14,14 +14,16 @@ export interface PluginSettings {
 	hashAlgorithm: HashAlgorithm;
 	encodingDigest: EncodeDigest;
 	copyImageFileSupport: boolean;
+	othersFileSupport: boolean;
 	notification: boolean;
 	hashContext: boolean;
 }
 
 export const DEFAULT_SETTINGS: PluginSettings = {
 	hashAlgorithm: HashAlgorithm.SHA512,
-	copyImageFileSupport: false,
 	encodingDigest: EncodeDigest.HEX,
+	copyImageFileSupport: false,
+	othersFileSupport: false,
 	notification: true,
 	hashContext: false,
 };

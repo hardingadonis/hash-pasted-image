@@ -46,7 +46,8 @@ export default class HashPastedImagePlugin extends Plugin {
 				if (isMarkdownFile(file)) return;
 
 				const isFileSupport =
-					this.settings.copyImageFileSupport && isSupportedFile(file);
+					this.settings.copyImageFileSupport &&
+					isSupportedFile(file, this.settings.othersFileSupport);
 				const isPasted = isPastedImage(file);
 
 				if (isFileSupport || isPasted) {
@@ -181,7 +182,10 @@ const isPastedImage = (file: TAbstractFile): boolean => {
 	return false;
 };
 
-const isSupportedFile = (file: TAbstractFile): boolean => {
+const isSupportedFile = (
+	file: TAbstractFile,
+	othersFileSupport: boolean,
+): boolean => {
 	if (file instanceof TFile) {
 		const imageValidExtensions = [
 			'jpg',
@@ -223,9 +227,9 @@ const isSupportedFile = (file: TAbstractFile): boolean => {
 
 		const validExtensions = [
 			...imageValidExtensions,
-			...videoValidExtensions,
-			...audioValidExtensions,
-			...documentValidExtensions,
+			...(othersFileSupport ? videoValidExtensions : []),
+			...(othersFileSupport ? audioValidExtensions : []),
+			...(othersFileSupport ? documentValidExtensions : []),
 		];
 
 		return validExtensions.includes(file.extension.toLowerCase());
@@ -303,6 +307,20 @@ class SettingTab extends PluginSettingTab {
 					.setValue(this.plugin.settings.copyImageFileSupport)
 					.onChange(async (value) => {
 						this.plugin.settings.copyImageFileSupport = value;
+						await this.plugin.saveSettings();
+					}),
+			);
+
+		new Setting(containerEl)
+			.setName('Others File Support')
+			.setDesc(
+				'Turn on to rename other files (video, audio, document) copied to the vault. See supported formats in the code.',
+			)
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.plugin.settings.othersFileSupport)
+					.onChange(async (value) => {
+						this.plugin.settings.othersFileSupport = value;
 						await this.plugin.saveSettings();
 					}),
 			);
